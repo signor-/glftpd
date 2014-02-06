@@ -63,7 +63,6 @@ for test_dir in $test_dirs; do
 				echo "[+] release $nuke_ori is complete, unnuking with reason auto.unnuke_release.was.rescanned.and.is.complete"
 				$nuker_bin -N $nuke_user -u "$unnuke_dir/$nuke_ori" auto.unnuke_release.was.rescanned.and.is.complete >/dev/null 2>&1
 				fi
-
 			else
 				echo "[-] complete dir found for $nuke_rel with a different nuke reason, skipping!";
 			fi
