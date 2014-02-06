@@ -1,17 +1,5 @@
-         .
-               .                                    .
-         .                                                .
-. .   .--|     .------------------------------------.      ------------.   . .
-  ____   |    _|___     ____      ______    _______ |     . _______  ____
-_/ __/___|_  /  __/____/ __/_____/  ___/__ /|__    )_     __\ __   _/   /__
-\_______   \ \  \__   \_______  /  /      \   /_     \    \   |/   \    __/__
-   /   /   /      /   /  /   / /  /       /    /      \   /   _____/   /    /
-  /      |           /  /      \__       /____/     |    /    |   /         \
-  \______ _    |_____\()\____SiGSCRiPT___\   /______ _   _|___/   \__________\
-. .   .---     -------------------------------------|     |------------.   . .
-         |     .                                    .     |
 
-                                GLFTPD SCRIPTS
+                                                       GLFTPD SCRIPTS
 
  Please take note that these scripts come without instructions on how to set
  them up, it is sole responsibility of the end user to understand the scripts
@@ -28,5 +16,3 @@ _/ __/___|_  /  __/____/ __/_____/  ___/__ /|__    )_     __\ __   _/   /__
  binaries needed to make the script funtion, that is up to you to sort out.
  
  signor
-
-. .   .----------------------------------------------------------------.   . .
