@@ -1,5 +1,4 @@
-
-                                                       GLFTPD SCRIPTS
+ GLFTPD SCRIPTS
 
  Please take note that these scripts come without instructions on how to set
  them up, it is sole responsibility of the end user to understand the scripts
