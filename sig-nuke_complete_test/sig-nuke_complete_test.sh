@@ -20,7 +20,7 @@ rescan_bin="/glftpd/bin/rescan"
 # nuker binary
 nuker_bin="/glftpd/bin/nuker"
 # nuke user
-nuke_user="VIBEZ"
+nuke_user="NUKER"
 #nuke label for directories
 nuke_label="(nuked)-"
 #nuke reason for automatic incomplete nukes
