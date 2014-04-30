@@ -54,10 +54,10 @@ function REQADD () {
 		exit 1
 	else
 		REQUEST="$(echo $@ | sed 's/REQADD //' | tr ' ' '_')"
-		REQEXISTS=$(find "$REQUESTDIR" -mindepth 1 -maxdepth 1 -type d -iname "*$REQUEST$")
+		REQEXISTS=$(find "$REQUESTDIR" -mindepth 1 -maxdepth 1 -type d -iname "$REQUEST" | grep "$REQUEST$")
 		if [ -z "$REQEXISTS" ]; then
 			REQLINESEP="--------------->"
-			printf -v REQINFO "%s %s %s\n" $USER "${REQLINESEP:${#USER}}" $REQUEST
+			printf -v REQINFO "%s %s %s" $USER "${REQLINESEP:${#USER}}" $REQUEST
 			echo "[REQADD] ADDED: $REQUEST."
 			echo "[ `date "+%Y-%m-%d"` ] $REQINFO" >> $REQUESTFILE
 			echo `date "+%a %b %d %T %Y"` REQADD: \"$REQUEST\" \"$USER\" >> $GLLOG
@@ -72,8 +72,8 @@ function REQADD () {
 function REQFIL () {
 	REQUEST="$(echo $@ | sed 's/REQFIL //' | sed "s/$REQFILLABEL//" | tr ' ' '_')"
 	if [ -d "$REQUESTDIR/$REQUEST" ]; then
-		RUSER=$(grep -Ex ".*$REQUEST" "$REQUESTFILE" | tr " " "#" | awk -F# '{print $4}')
-		grep -Exv ".*$REQUEST" "$REQUESTFILE" >> $TEMP/sig-requests.tmp
+		RUSER=$(grep -E "$REQUEST$" "$REQUESTFILE" | tr " " "#" | awk -F# '{print $4}')
+		grep -Ev "$REQUEST$" "$REQUESTFILE" >> $TEMP/sig-requests.tmp
 		cp -f $TEMP/sig-requests.tmp "$REQUESTFILE"
 		rm -f $TEMP/sig-requests.tmp
 		mv "$REQUESTDIR/$REQUEST" "$REQUESTDIR/$REQFILLABEL$REQUEST"
@@ -89,12 +89,12 @@ function REQFIL () {
 function REQDEL () {
 	REQUEST="$(echo $@ | sed 's/REQDEL //' | sed "s/$REQFILLABEL//" | tr ' ' '_')"
 	if [ -d "$REQUESTDIR/$REQUEST" ]; then
-		REQUSER=$(cat $REQUESTFILE | grep -Ex ".*$REQUEST" | grep -w "$USER")
+		REQUSER=$(cat $REQUESTFILE | grep -E "$REQUEST$" | grep -w "$USER")
 		if [ -z "$REQUSER" ]; then
 			echo "[REQDEL] ERROR: YOU CAN ONLY DELETE REQUESTS MADE BY YOURSELF, EXITING."
 			exit 1
 		else
-			grep -Exv ".*$REQUEST" "$REQUESTFILE" >> $TEMP/sig-requests.tmp
+			grep -Ev "$REQUEST$" "$REQUESTFILE" >> $TEMP/sig-requests.tmp
 			cp -f $TEMP/sig-requests.tmp "$REQUESTFILE"
 			rm -f $TEMP/sig-requests.tmp
 			rm -rf "$REQUESTDIR/$REQUEST"
