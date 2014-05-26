@@ -54,7 +54,7 @@ function REQADD () {
 		exit 1
 	else
 		REQUEST="$(echo $@ | sed 's/REQADD //' | tr ' ' '_')"
-		REQEXISTS=$(find "$REQUESTDIR" -mindepth 1 -maxdepth 1 -type d -iname "$REQUEST" | grep "$REQUEST$")
+		REQEXISTS=$(find "$REQUESTDIR" -mindepth 1 -maxdepth 1 -type d -iname "$REQUEST" | grep -E "$REQUEST$")
 		if [ -z "$REQEXISTS" ]; then
 			REQLINESEP="--------------->"
 			printf -v REQINFO "%s %s %s" $USER "${REQLINESEP:${#USER}}" $REQUEST
@@ -72,8 +72,9 @@ function REQADD () {
 function REQFIL () {
 	REQUEST="$(echo $@ | sed 's/REQFIL //' | sed "s/$REQFILLABEL//" | tr ' ' '_')"
 	if [ -d "$REQUESTDIR/$REQUEST" ]; then
-		RUSER=$(grep -E "$REQUEST$" "$REQUESTFILE" | tr " " "#" | awk -F# '{print $4}')
-		grep -Ev "$REQUEST$" "$REQUESTFILE" >> $TEMP/sig-requests.tmp
+		REQESC=$(echo "$REQUEST" | sed -e 's/[(]/\\(/g' -e 's/[)]/\\)/g' )
+		RUSER=$(grep -Ex ".*$REQESC" "$REQUESTFILE" | tr " " "#" | awk -F# '{print $4}')
+		grep -Exv ".*$REQESC" "$REQUESTFILE" >> $TEMP/sig-requests.tmp
 		cp -f $TEMP/sig-requests.tmp "$REQUESTFILE"
 		rm -f $TEMP/sig-requests.tmp
 		mv "$REQUESTDIR/$REQUEST" "$REQUESTDIR/$REQFILLABEL$REQUEST"
@@ -89,12 +90,13 @@ function REQFIL () {
 function REQDEL () {
 	REQUEST="$(echo $@ | sed 's/REQDEL //' | sed "s/$REQFILLABEL//" | tr ' ' '_')"
 	if [ -d "$REQUESTDIR/$REQUEST" ]; then
-		REQUSER=$(cat $REQUESTFILE | grep -E "$REQUEST$" | grep -w "$USER")
+		REQESC=$(echo "$REQUEST" | sed -e 's/[(]/\\(/g' -e 's/[)]/\\)/g' )
+		REQUSER=$(cat $REQUESTFILE | grep -Ex ".*$REQESC" | grep -w "$USER")
 		if [ -z "$REQUSER" ]; then
 			echo "[REQDEL] ERROR: YOU CAN ONLY DELETE REQUESTS MADE BY YOURSELF, EXITING."
 			exit 1
 		else
-			grep -Ev "$REQUEST$" "$REQUESTFILE" >> $TEMP/sig-requests.tmp
+			grep -Exv ".*$REQESC" "$REQUESTFILE" >> $TEMP/sig-requests.tmp
 			cp -f $TEMP/sig-requests.tmp "$REQUESTFILE"
 			rm -f $TEMP/sig-requests.tmp
 			rm -rf "$REQUESTDIR/$REQUEST"
